@@ -53,3 +53,6 @@ python nlp_enriched_news.py
 
 Cela devrait démarrer le processus de traitement des articles de presse enrichis par NLP.
 
+
+
+https://googlechromelabs.github.io/chrome-for-testing/
