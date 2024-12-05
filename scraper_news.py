@@ -3,45 +3,68 @@ import requests
 
 
 
-domain= 'https://www.bbc.com'
+domain= 'https://www.bbc.com/news'
 
 params=0
 
 
 counter =0
-for i in range(0, 1112):
-
-    html_text= requests.get(f'https://www.bbc.com/search?q=news&page={i}').text
-    print(f'https://www.bbc.com/search?q=news&page={i}')
-    soup= BeautifulSoup(html_text, 'lxml')
 
 
-    news = soup.find_all('div', attrs={'data-testid': "liverpool-card"})
-   
+html_text = requests.get(f'https://www.bbc.com/news')
+if html_text.status_code == 200:
+    soup= BeautifulSoup(html_text.text, 'lxml' )
+    news= soup.find_all('div', {'data-testid': "anchor-inner-wrapper"})
+    
+
     for new in news:
-        is_article= new.find('div', attrs= {'data-testid':"liverpool-article"})
-        date_ago=  new.find('div', class_="sc-6fba5bd4-0 bFzmvn").text
-
-        if is_article and ('1 day' in date_ago) :
-
-            link= new.find('a', class_="sc-2e6baa30-0 gILusN")['href']    
-            article_html= requests.get(domain+link).text
-
-            soup_article=BeautifulSoup(article_html, 'lxml')
-            content_paragraphs = [line.get_text() for line in soup_article.find_all("p", attrs={'class': 'sc-eb7bd5f6-0 fYAfXe'})]
-            article_content = ''
-            for paragraph in content_paragraphs:
-                paragraph = paragraph.replace("�", "'")
-                article_content += paragraph
-
-            print(article_content)
-            # df.at[index, 'Article_Content'] = article_content
-            print({counter}, date_ago)
-            print(domain+link)
+        is_article= new.find('div', {'data-testid':["edinburgh-article", "manchester-article", "chester-article"] })
+        if is_article: 
+            link= new.find('a', class_="sc-2e6baa30-0 gILusN")['href']
+            title= new.find('h2', {'data-testid': "card-headline"})
+            print(title.text)
+            print(counter, domain+link)
             counter+=1
+else:
+    exit()
 
 
-print(len(news))
+# for i in range(0, 1112):
+
+#     html_text= requests.get(f'https://www.bbc.com/search?q=news&page={i}').text
+#     soup= BeautifulSoup(html_text, 'lxml')
+
+
+#     news = soup.find_all('div', attrs={'data-testid': "liverpool-card"})
+   
+#     for new in news:
+#         is_article= new.find('div', attrs= {'data-testid':"liverpool-article"})
+#         date_ago=  new.find('div', class_="sc-6fba5bd4-0 bFzmvn").text
+
+#         if is_article and ('2 days' in date_ago) :
+
+#             link= new.find('a', class_="sc-2e6baa30-0 gILusN")['href']   
+#             title= new.find('h2', class_="sc-8ea7699c-3 gRBdkE").text
+        
+#             article_html= requests.get(domain+link).text
+
+#             soup_article=BeautifulSoup(article_html, 'lxml')
+
+#             main_content= soup_article.find("main", attrs={'id': "main-content"})
+          
+#             content_paragraphs = [line.get_text() for line in  main_content.find_all("p", attrs={'class': 'sc-eb7bd5f6-0 fYAfXe'})]
+#             article_content = ''
+#             for paragraph in content_paragraphs:
+#                 paragraph = paragraph.replace("�", "'")
+#                 article_content += paragraph
+#             print({counter}, title)
+#             # print(article_content)
+#             # print({counter}, date_ago)
+#             # print(domain+link)
+#             counter+=1
+
+
+# print(len(news))
 
 #edinburgh-card  anchor-inner-wrapper
 
