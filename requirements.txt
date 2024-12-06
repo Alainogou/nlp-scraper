@@ -1,4 +1,5 @@
  BeautifulSoup4
  pandas
  requests
- selenium==4.27.1
+ lxml
+ #selenium==4.27.1

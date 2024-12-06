@@ -3,7 +3,25 @@ import requests
 
 
 
-domain= 'https://www.bbc.com/news'
+def get_description(url: str) -> str:
+    article_html = requests.get(url).text
+    
+    soup_article = BeautifulSoup(article_html, 'lxml')
+    
+    main_content = soup_article.find("main", attrs={'id': "main-content"})
+    
+    content_paragraphs = [line.get_text() for line in main_content.find_all("p", attrs={'class': 'sc-eb7bd5f6-0 fYAfXe'})]
+    
+    description = ''
+    
+    for paragraph in content_paragraphs:
+        paragraph = paragraph.replace("�", "'") 
+        description += paragraph + "\n" 
+    
+    return description
+
+
+domain= 'https://www.bbc.com/'
 
 params=0
 
@@ -22,12 +40,20 @@ if html_text.status_code == 200:
         if is_article: 
             link= new.find('a', class_="sc-2e6baa30-0 gILusN")['href']
             title= new.find('h2', {'data-testid': "card-headline"})
+            description= get_description(domain+link)
+            print(description)
             print(title.text)
             print(counter, domain+link)
             counter+=1
 else:
     exit()
 
+
+
+
+
+
+    
 
 # for i in range(0, 1112):
 
