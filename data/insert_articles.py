@@ -10,7 +10,6 @@ def insert_article(conn, url, date, headline, body_article):
     ''', (url, date, headline, body_article))
     
     conn.commit()
-    print("insert", headline)
 
 
 

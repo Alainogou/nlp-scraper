@@ -63,11 +63,11 @@ def is_today(time_string: str):
 def scraper_new(): 
     domain= 'https://www.bbc.com/'
 
-    #counter =0
+    # counter =0
     html_text = requests.get('https://www.bbc.com/news')
     if html_text.status_code == 200:
         conn = sqlite3.connect('./data/articles.db')
-        cursor = conn.cursor()
+        
 
         soup= BeautifulSoup(html_text.text, 'lxml' )
         news= soup.find_all('div', {'data-testid': "anchor-inner-wrapper"})
@@ -91,7 +91,7 @@ def scraper_new():
                     
                     # print(counter, '-------------------------')
                     # print(title.text)
-                    counter+=1
+                    # counter+=1
 
         conn.close()
 
