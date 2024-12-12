@@ -1,5 +1,10 @@
 import pandas as pd
-
+import re
+import nltk
+from nltk import word_tokenize, pos_tag
+from nltk.corpus import stopwords, wordnet
+from nltk.stem import WordNetLemmatizer
+from sklearn.feature_extraction.text import CountVectorizer
 
 train_data=pd.read_csv('./data/bbc_news_train.txt', sep=',')
 test_data=pd.read_csv('./data/bbc_news_tests.txt', sep=',')
@@ -7,19 +12,16 @@ test_data=pd.read_csv('./data/bbc_news_tests.txt', sep=',')
 
 # download nltk
 
-import nltk
-# from nltk.tokenize import word_tokenize
-from nltk import word_tokenize, pos_tag
-from nltk.corpus import stopwords, wordnet
-from nltk.stem import WordNetLemmatizer
-from sklearn.feature_extraction.text import CountVectorizer
+
 
 lemmatizer = WordNetLemmatizer()
-import re
 
-#nltk.download('all')
 
- 
+# nltk.download('all')
+# nltk.download('punkt')  # For tokenization
+# nltk.download('stopwords')  # For stopwords corpus
+# nltk.download('wordnet') # For wordnet
+
 def get_wordnet_pos(tag):
     if tag.startswith('J'):
         return wordnet.ADJ
@@ -41,7 +43,6 @@ def lemmatize_passage(text):
     return lemmatized_sentence
 
 
-text="It is better. 01 Edu System presents an innovative curriculum in software engineering and programming. With a renowned industry-leading reputation, the curriculum has been rigorously designed for learning skills of the digital world and technology industry. Taking a different approach than the classic teaching methods today, learning is facilitated through a collective and co-creative process in a professional environment."
 
 def preprocessing(text):
     text= text.lower()
@@ -55,14 +56,11 @@ def preprocessing(text):
     filtered_phrases=' '.join(filtered_words)
     
     lemmatizer = lemmatize_passage(filtered_phrases)
-    # r = ' '.join(lemmatizer_words)
-    # # print(r)
-
-    # porter_stemmer = PorterStemmer()
-    # stemming_words= [ porter_stemmer.stem(word) for word in filtered_words]
+  
     return  lemmatizer
 
-
+# count_vecotrized_df = pd.DataFrame.sparse.from_spmatrix(train_data['Text'], columns=train_data['Text'].get_feature_names_out())
+# print(count_vecotrized_df.iloc[:3,400:403])
 
 train_data['Text']= [preprocessing(text) for text in train_data['Text'] ]
 # words = word_tokenize(text)
@@ -78,21 +76,7 @@ X = cv.fit_transform(train_data['Text'])
 
 print(X.shape)
 
-# count_vecotrized_df = pd.DataFrame.sparse.from_spmatrix(train_data['Text'], columns=train_data['Text'].get_feature_names_out())
-# print(count_vecotrized_df.iloc[:3,400:403].to_markdown())
+print()
+
 # print(preprocessing(text))
-import matplotlib.pyplot as plt
 
-# Calculer les proportions (normalisées) des catégories
-category_proportions = train_data['Category'].value_counts(normalize=True)
-
-# Tracer un graphique à barres
-category_proportions.plot(kind='bar')
-
-# Ajouter un titre et des labels aux axes
-plt.title('Distribution des catégories')
-plt.xlabel('Catégories')
-plt.ylabel('Proportion')
-
-# Afficher le graphique
-plt.show()

@@ -60,3 +60,7 @@ https://googlechromelabs.github.io/chrome-for-testing/
 curl -O https://repo.anaconda.com/archive/Anaconda3-2024.10-1-Linux-x86_64.sh
 
 https://medium.com/eni-digitalks/text-preprocessing-nlp-fundamentals-with-spacy-54f32e520bc8
+
+https://scikit-learn.org/dev/auto_examples/model_selection/plot_learning_curve.html#sphx-glr-auto-examples-model-selection-plot-learning-curve-py
+
+https://www.alliage-ad.com/data-science/structures-de-sauvegarde-de-modele-de-machine-learning-le-format-pickle/

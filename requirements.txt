@@ -4,3 +4,5 @@
  lxml
  spacy
  numpy
+ matplotlib
+ nltk
