@@ -1,8 +1,10 @@
+ python==3.10
  BeautifulSoup4
+ numpy
  pandas
  requests
  lxml
  spacy
- numpy
  matplotlib
  nltk
+ scikit-learn

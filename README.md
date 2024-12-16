@@ -51,7 +51,21 @@ Une fois les dépendances installées, tu peux exécuter le script principal du 
 python nlp_enriched_news.py
 ```
 
+install requirement
+conda create --name <env> --file <this file>
+
 Cela devrait démarrer le processus de traitement des articles de presse enrichis par NLP.
+
+
+**Note**
+
+Modèle avec une bonne capacité de généralisation : Si la courbe de test s'améliore continuellement, cela montre que le modèle apprend de manière stable et qu'il est capable de généraliser de mieux en mieux à mesure que l'on lui donne plus d'exemples.
+
+Absence de sur-apprentissage (overfitting) : La courbe d'entraînement constante indique que le modèle ne continue pas à sur-ajuster les données d'entraînement. S'il y avait du sur-apprentissage, on s'attendrait à voir la courbe d'entraînement diminuer rapidement, tandis que la courbe de test stagnerait ou empirerait.
+
+Absence de sous-apprentissage (underfitting) : Si le modèle était sous-apprenant, la courbe d'entraînement et la courbe de test resteraient toutes deux à des niveaux élevés d'erreur (ou faibles de performance) et ne s'amélioreraient pas beaucoup, même avec plus de données d'entraînement. Ici, ton modèle semble assez bien apprendre, car la courbe de test s'améliore
+
+
 
 
 
