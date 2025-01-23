@@ -1,22 +1,22 @@
 # pip install -U spacy
 # python -m spacy download en_core_web_sm
 import spacy 
-import pickle
-from preprocessing import preprocessing
-from sentiment_analysis import sentiment_analysis
+# import pickle
+# from preprocessing import preprocessing
+# from sentiment_analysis import sentiment_analysis
+
 # import spacy.cli
 # spacy.cli.download("en_core_web_sm")
 
 def entities_detection(text):
     nlp = spacy.load("en_core_web_sm")
     doc = nlp(text)
-
-    ent = []
+    entities = []
     for entity in doc.ents:
-        if entity.label_ == 'ORG':  
-            ent.append(entity.text)
+        if entity.label_ == 'ORG' and entity.text not in  entities:  
+            entities.append( entity.text)
             
-    return ent
+    return entities
 
 
 
@@ -32,18 +32,18 @@ text = ('ABC News has agreed to pay $15m (£12m) to US President-elect Donald Tr
 'An ABC News spokesperson said in a statement the company was pleased that the parties have reached an agreement to dismiss the lawsuit on the terms in the court filing.'
 'In 2023, a New York civil court found Trump sexually abused E Jean Carroll in a dressing room at a department store in 1996. He was also found guilty of defaming the magazine columnist.'
 )
-with open('topic_classifier.pkl', 'rb') as file:
-    model=pickle.load(file)
-    article= preprocessing(text)
+# with open('topic_classifier.pkl', 'rb') as file:
+#     model=pickle.load(file)
+#     article= preprocessing(text)
     
 
-    with open("vectorizer.pkl", "rb") as vectorizer_file:
-        vectorizer = pickle.load(vectorizer_file)
+#     with open("vectorizer.pkl", "rb") as vectorizer_file:
+#         vectorizer = pickle.load(vectorizer_file)
     
-        article_vect= vectorizer.transform([article])
-        # 'sport': 1, 'business': 2, 'politics': 3, 'entertainment': 4, 'tech': 5 business
-        print(model.predict(article_vect))
+#         article_vect= vectorizer.transform([article])
+#         # 'sport': 1, 'business': 2, 'politics': 3, 'entertainment': 4, 'tech': 5 business
+#         print(model.predict(article_vect))
     
-    print(sentiment_analysis(article))
+#     print(sentiment_analysis(article))
 
 # print(entities_detection(text))

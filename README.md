@@ -67,6 +67,8 @@ Absence de sous-apprentissage (underfitting) : Si le modèle était sous-apprena
 
 
 
+# pip install -U spacy
+# python -m spacy download en_core_web_sm
 
 
 https://googlechromelabs.github.io/chrome-for-testing/

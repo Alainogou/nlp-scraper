@@ -28,8 +28,8 @@ def preprocessing(text):
     
     filtered_words = [word for word in words if word.lower() not in stopwords.words('english')]
 
-    filtered_phrases=' '.join(filtered_words)
+    filtered_phrases = ' '.join(filtered_words)
     
-    lemmatizer =  stemming_text(filtered_phrases)
+    stems =  stemming_text(filtered_phrases)
   
-    return  lemmatizer
+    return  stems
