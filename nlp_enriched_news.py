@@ -8,8 +8,8 @@ import spacy
 # import spacy.cli
 # spacy.cli.download("en_core_web_sm")
 
+nlp = spacy.load("en_core_web_lg")
 def entities_detection(text):
-    nlp = spacy.load("en_core_web_sm")
     doc = nlp(text)
     entities = []
     for entity in doc.ents:

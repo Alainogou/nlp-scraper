@@ -71,6 +71,14 @@ Absence de sous-apprentissage (underfitting) : Si le modèle était sous-apprena
 # python -m spacy download en_core_web_sm
 
 
+Pourquoi choisir le score maximum dans ce cas ?
+Le score maximum semble être le meilleur choix dans ce contexte pour plusieurs raisons :
+Mettre en avant les articles les plus frappants : Le score maximum permettra de repérer immédiatement les articles qui contiennent les passages les plus pertinents, même si seulement une ou deux phrases dans l'article mentionnent le sujet clé. Si une phrase est particulièrement pertinente, vous voulez que l'article soit classé parmi les meilleurs, même si d'autres phrases sont moins pertinentes.
+Identifier les articles les plus marquants : Lorsque vous sélectionnez les 10 articles les plus marquants, l'impact de chaque phrase individuelle (et pas simplement la moyenne) doit être pris en compte. Un article avec une phrase particulièrement forte, même s'il y a d'autres mentions faibles, devrait apparaître dans votre top 10.
+Réflexion de l'intensité du scandale : Un seul passage très pertinent dans un article pourrait signaler un scandale environnemental majeur. Par exemple, un article qui mentionne explicitement la déforestation dans un contexte très critique doit être sélectionné même si une majorité des autres phrases n'ont pas de lien direct.
+
+
+
 https://googlechromelabs.github.io/chrome-for-testing/
 
 curl -O https://repo.anaconda.com/archive/Anaconda3-2024.10-1-Linux-x86_64.sh
