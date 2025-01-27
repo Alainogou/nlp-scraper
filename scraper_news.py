@@ -3,6 +3,7 @@ import requests
 from datetime import datetime, timedelta
 from data import insert_articles
 import sqlite3
+import pandas as pd
 
 
 def get_description(url: str) -> str:
@@ -56,48 +57,77 @@ def is_today(time_string: str):
 
     return False
 
-
+def convert_to_date(date_str):
+    # On extrait les jours (numéro) à partir de la chaîne de caractères
+    days_ago = int(date_str.split()[0])  # "1 day ago" -> "1"
+    
+    # Date d'aujourd'hui
+    today = pd.Timestamp.today()
+    
+    # Calcul de la date en soustrayant le nombre de jours
+    date = today - timedelta(days=days_ago)
+    
+    return date
 
 
 
 def scraper_new(): 
+    
+    
     domain= 'https://www.bbc.com/'
 
     counter =0
-    html_text = requests.get('https://www.bbc.com/news')
-    if html_text.status_code == 200:
-        conn = sqlite3.connect('./data/articles.db')
+    # page_id =1
+    for page_id in range(0, 10):
         
+        # html = requests.get('https://www.bbc.com/news')
+        html= requests.get(f'https://www.bbc.com/search?q=news&page={page_id}')
 
-        soup= BeautifulSoup(html_text.text, 'lxml' )
-        news= soup.find_all('div', {'data-testid': "anchor-inner-wrapper"})
-    
-    
-        for new in news:
-            is_article= new.find('div', {'data-testid':["edinburgh-article", "manchester-article", "chester-article"] })
+        if html.status_code == 200:
+           
+            conn = sqlite3.connect('./data/articles.db')
+            
 
-            if is_article: 
-                time_ago =new.find('span', class_="sc-6fba5bd4-1 efYorw")     
+            soup= BeautifulSoup(html.text, 'lxml' )
+            news= soup.find_all('div', {'data-testid': "anchor-inner-wrapper"})
+           
+            # news = soup.find_all('div', attrs={'data-testid': "liverpool-card"})
+            
+
+            
+            for new in news:
                 
-                if is_today(time_ago.text):
-                    
-                    date= datetime.now().date()
-                    link= new.find('a', class_="sc-2e6baa30-0 gILusN")['href']
-                    title= new.find('h2', {'data-testid': "card-headline"})
-                    url=domain+link
-                    body_article= get_description(url)
+                
+                is_article= new.find('div', {'data-testid':["edinburgh-article", "manchester-article", "chester-article"] })
+                print(len(news), is_article)
+                if is_article: 
+                    time_ago =new.find('span', class_="sc-6fba5bd4-1 efYorw")     
+                
+                    print(page_id)
+                    if time_ago.text in ["1 day ago", "2 days ago", "3 days ago", "4 days ago", "5 days ago"]:
+                        
 
-                    # insert_articles.insert_article(conn, url, date, title.text, body_article )
-                    
-                    print(counter, '-------------------------')
-                    print(title.text)
-                    counter+=1
+                        date= convert_to_date(time_ago.text).date()
 
-        conn.close()
+                        link= new.find('a', class_="sc-2e6baa30-0 gILusN")['href']
+                        title= new.find('h2', {'data-testid': "card-headline"})
+                        url=domain+link
+                        body_article= get_description(url)
 
-    else:
-        exit()
+                        # insert_articles.insert_article(conn, url, date, title.text, body_article )
+                        
+                        print(counter, date, page_id, '------------------------------')
+                        print(title.text, time_ago.text)
+                        counter+=1
+                        
+            # page_id+=1
 
+            conn.close()
+        
+        else:
+            exit()
+
+        
 
 
 
