@@ -14,12 +14,12 @@ nlp = spacy.load("en_core_web_lg")
 
 
 
+
 df= operations_db.get_articles()
 
-print(df.columns)
 
-
-df['Org'] = df.apply(lambda x: entities_detection(x['Headline'] + x['Body'], nlp), axis=1)
+print("---------- Detect entities ----------")
+df['Org'] = df.apply(lambda x: entity_detection.entities_detection(x['Headline'] + x['Body'], nlp), axis=1)
 
 
 print(df.head(1)[['Headline', 'Body']])
