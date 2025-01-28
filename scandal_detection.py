@@ -59,8 +59,7 @@ def similarity(sentence, keyword):
     
     return similarity
 
-sentenc='The rapid destruction of forests'
-sent2='You are so good'
+
 
 import numpy as np
 

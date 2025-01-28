@@ -1,6 +1,6 @@
 
 
-def entities_detection(text, nlp):
+def entities(text, nlp):
     doc = nlp(text)
     entities = []
     for entity in doc.ents:
@@ -8,3 +8,21 @@ def entities_detection(text, nlp):
             entities.append( entity.text)
             
     return entities
+
+
+
+
+def entities_detection(df, nlp):
+
+    orgs=[]
+
+    for _, row in df.iterrows():
+        
+        text= row['Headline'] + ' ' +  row['Body']
+        org=entities(text,  nlp )
+        orgs.append(org)
+
+        print(f'Detected {len(org)} companies which are {', '.join(org)}')
+
+    return orgs
+        

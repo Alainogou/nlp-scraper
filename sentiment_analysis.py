@@ -1,5 +1,5 @@
 import nltk
-# nltk.download('vader_lexicon')
+nltk.download('vader_lexicon')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 
@@ -18,7 +18,4 @@ def sentiment_analysis(text):
 
 
 
-text = "This movie was absolutely terrible! The acting was horrible and the plot was confusing."
-
-
-print(sentiment_analysis(text))
+#
