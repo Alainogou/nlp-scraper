@@ -4,14 +4,15 @@ from datetime import datetime
 conn = sqlite3.connect('./data/articles.db')
 cursor = conn.cursor()
 
-# Création de la table
+# create table
+
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS articles (
-    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    'Unique ID' INTEGER PRIMARY KEY AUTOINCREMENT,
     URL TEXT NOT NULL,
-    date TEXT NOT NULL,
-    headline TEXT NOT NULL,
-    body_article TEXT NOT NULL
+    'Date scraped' TEXT NOT NULL,
+    Headline TEXT NOT NULL,
+    Body TEXT NOT NULL
 )
 ''')
 
@@ -20,5 +21,9 @@ conn.close()
 
 
 
-
+# Unique ID 
+# URL 
+# Date scraped 
+# Headline 
+# Body 
 
