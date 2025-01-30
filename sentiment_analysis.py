@@ -9,12 +9,16 @@ def sentiment_analysis(text):
 
     scores = analyzer.polarity_scores(text)
 
+    sentiment=''
     if scores['compound'] >= 0.05:
-        return 'Positve'
+        sentiment= 'Positve'
     elif scores['compound'] <= -0.05:
-        return 'Negative'
+        sentiment= 'Negative'
     else:
-        return 'Neutral'
+        sentiment= 'Neutral'
+
+    return scores['compound'], sentiment
+   
 
 
 
