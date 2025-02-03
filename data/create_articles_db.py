@@ -19,11 +19,3 @@ CREATE TABLE IF NOT EXISTS articles (
 conn.close()
 
 
-
-
-# Unique ID 
-# URL 
-# Date scraped 
-# Headline 
-# Body 
-

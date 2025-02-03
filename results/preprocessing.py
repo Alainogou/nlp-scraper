@@ -10,6 +10,9 @@ from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 
 
+
+
+
 def stemming_text(text):
     porter = PorterStemmer()
     words = word_tokenize(text)

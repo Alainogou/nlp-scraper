@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 from datetime import datetime, timedelta
-from scripts import operations_db
+from data import operations_db
 import sqlite3
 import pandas as pd
 

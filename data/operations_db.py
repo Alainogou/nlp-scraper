@@ -15,14 +15,8 @@ def insert_article(conn, url, date, headline, body_article):
     conn.commit()
 
 
-# Unique ID 
-# URL 
-# Date scraped 
-# Headline 
-# Body 
 
 # Get articles
-
 def get_articles():
 
     cnx = sqlite3.connect('./data/articles.db')
