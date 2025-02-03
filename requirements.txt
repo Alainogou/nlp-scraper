@@ -2,6 +2,7 @@
  BeautifulSoup4
  numpy
  pandas
+ seaborn
  requests
  lxml
  spacy

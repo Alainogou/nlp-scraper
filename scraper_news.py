@@ -6,6 +6,7 @@ import sqlite3
 import pandas as pd
 
 
+
 def get_description(url: str) -> str:
 
     article_html = requests.get(url)

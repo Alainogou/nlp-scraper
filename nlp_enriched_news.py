@@ -209,7 +209,7 @@ for _, row in df.iterrows():
     org, topic, score_sentiment, scandal_dist =  enriched_sentence(row, nlp, model, vectorizer, dict_topic )
    
     orgs.append(org)
-    topics.append(org)
+    topics.append(topic)
     sentiments.append(score_sentiment)
     scandal_distances.append(scandal_dist)
 
