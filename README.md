@@ -1,90 +1,137 @@
+# NLP-Enriched News Intelligence Platform
+
+## Project Overview
+The goal of this project is to develop a platform that integrates Natural Language Processing (NLP) techniques to provide insightful analysis of news articles. The platform connects to a news data source, processes the articles through various NLP tasks, and outputs enriched data. It performs the following core tasks:
+
+1. **Entity Detection** - Identifies and categorizes organizations (companies) mentioned in the articles.
+2. **Topic Detection** - Classifies news articles into predefined topics such as Tech, Sport, Business, Entertainment, or Politics.
+3. **Sentiment Analysis** - Assesses the sentiment (positive, negative, or neutral) of each article.
+4. **Scandal Detection** - Detects potential environmental scandals associated with the companies mentioned in the articles.
 
 
-```markdown
-# Projet NLP Enriched News
 
-Ce projet a pour but d'enrichir des articles de presse à l'aide de techniques de traitement du langage naturel (NLP). Ce `README.md` explique comment installer les dépendances, configurer l'environnement, et exécuter le script principal.
+## Setup Instructions
 
-
-## Installation des dépendances
-
-### 1. Cloner le projet
-
-Clone ce projet depuis le dépôt Git :
-
-```bash
-git clone https://url_de_ton_projet.git
-cd ton_projet
-```
-
-### 2. Créer et activer un environnement virtuel
-
-Il est recommandé de créer un environnement virtuel pour isoler les dépendances de ton projet.
-
-- Sur **Linux/macOS** :
-
+### Prerequisites
+- Python 3.10
+- Install required dependencies by running:
+  
   ```bash
-  python -m venv venv
-  source venv/bin/activate
+  conda create --name env --file requirements.txt
   ```
 
-- Sur **Windows** :
+### Scraper Setup
 
-  ```bash
-  python -m venv venv
-  venv\Scripts\activate
-  ```
+The **scraper_news.py** script is responsible for fetching news articles from a designated source and saving them into a  SQL database. The scraper should collect at least 300 articles over the past week for analysis.
 
-### 3. Installer les dépendances
-
-Installe toutes les dépendances nécessaires en utilisant le fichier `requirements.txt` :
+Run the scraper:
 
 ```bash
-pip install -r requirements.txt
+python3 scraper_news.py
 ```
 
-### 4. Lancer le script principal
+### NLP Engine Setup
 
-Une fois les dépendances installées, tu peux exécuter le script principal du projet :
+The **nlp_enriched_news.py** script processes the collected news articles by applying various NLP techniques. These include entity detection, topic classification, sentiment analysis, and scandal detection. It outputs a CSV file (`enhanced_news.csv`) with enriched information for each article.
+
+Run the NLP processing:
 
 ```bash
-python nlp_enriched_news.py
+python3 nlp_enriched_news.py
 ```
 
-install requirement
-conda create --name <env> --file <this file>
+### Output
 
-Cela devrait démarrer le processus de traitement des articles de presse enrichis par NLP.
+After running the NLP engine, you will get the enriched data stored in `enhanced_news.csv`. The file will include the following columns:
 
+- **Unique ID**: Unique identifier for the article.
+- **URL**: URL of the article.
+- **Date**: Date when the article was scraped.
+- **Headline**: Headline of the article.
+- **Body**: Body of the article.
+- **Org**: List of companies/organizations detected.
+- **Topics**: List of topics classified (Tech, Sport, Business, Entertainment, Politics).
+- **Sentiment**: Sentiment score (float).
+- **Scandal_distance**: Metric indicating the likelihood of an environmental scandal.
+- **Top_10**: Boolean flag marking the top 10 articles based on scandal detection.
 
-**Note**
+### Example Output:
+```
+Unique ID | URL             | Date        | Headline              | Org               | Topics      | Sentiment | Scandal_distance | Top_10
+---------------------------------------------------------------------------------------------
+1         | www.news1.com    | 2025-02-05  | Tech Company X hits a new milestone | ['Company X']    | ['Tech']   | 0.7        | 0.05            | False
+2         | www.news2.com    | 2025-02-05  | Environmental Disaster caused by Company Y | ['Company Y']    | ['Business'] | -0.8       | 0.95            | True
+...
+```
 
-Modèle avec une bonne capacité de généralisation : Si la courbe de test s'améliore continuellement, cela montre que le modèle apprend de manière stable et qu'il est capable de généraliser de mieux en mieux à mesure que l'on lui donne plus d'exemples.
+## Core Features
 
-Absence de sur-apprentissage (overfitting) : La courbe d'entraînement constante indique que le modèle ne continue pas à sur-ajuster les données d'entraînement. S'il y avait du sur-apprentissage, on s'attendrait à voir la courbe d'entraînement diminuer rapidement, tandis que la courbe de test stagnerait ou empirerait.
+### 1. **Entity Detection**
 
-Absence de sous-apprentissage (underfitting) : Si le modèle était sous-apprenant, la courbe d'entraînement et la courbe de test resteraient toutes deux à des niveaux élevés d'erreur (ou faibles de performance) et ne s'amélioreraient pas beaucoup, même avec plus de données d'entraînement. Ici, ton modèle semble assez bien apprendre, car la courbe de test s'améliore
+This task extracts organizations (ORG entities) mentioned in the article's body and headline. We use **SpaCy** for Named Entity Recognition (NER) to identify companies and organizations.
 
+### 2. **Topic Detection**
 
+The classifier categorizes articles into topics using a pre-trained model based on a labeled dataset. The available topics include:
+- Tech
+- Sport
+- Business
+- Entertainment
+- Politics
 
-# pip install -U spacy
-# python -m spacy download en_core_web_sm
+The classifier is trained using `scikit-learn`, and its learning curves are saved to `learning_curves.png`.
 
+### 3. **Sentiment Analysis**
 
-Pourquoi choisir le score maximum dans ce cas ?
-Le score maximum semble être le meilleur choix dans ce contexte pour plusieurs raisons :
-Mettre en avant les articles les plus frappants : Le score maximum permettra de repérer immédiatement les articles qui contiennent les passages les plus pertinents, même si seulement une ou deux phrases dans l'article mentionnent le sujet clé. Si une phrase est particulièrement pertinente, vous voulez que l'article soit classé parmi les meilleurs, même si d'autres phrases sont moins pertinentes.
-Identifier les articles les plus marquants : Lorsque vous sélectionnez les 10 articles les plus marquants, l'impact de chaque phrase individuelle (et pas simplement la moyenne) doit être pris en compte. Un article avec une phrase particulièrement forte, même s'il y a d'autres mentions faibles, devrait apparaître dans votre top 10.
-Réflexion de l'intensité du scandale : Un seul passage très pertinent dans un article pourrait signaler un scandale environnemental majeur. Par exemple, un article qui mentionne explicitement la déforestation dans un contexte très critique doit être sélectionné même si une majorité des autres phrases n'ont pas de lien direct.
+Sentiment analysis classifies each article as positive, negative, or neutral. We use a **pre-trained NLTK model** for sentiment analysis to quickly analyze the sentiment without needing to train a custom model.
 
+### 4. **Scandal Detection**
 
+Scandal detection identifies potential environmental disasters involving companies. This is achieved by:
+- Defining keywords (e.g., pollution, deforestation) related to environmental scandals.
+- Calculating the distance between the keywords' embeddings and the detected entities.
+- Flagging articles that meet the scandal threshold (top 10 articles).
 
-https://googlechromelabs.github.io/chrome-for-testing/
+### 5. **Source Analysis** (Optional)
 
-curl -O https://repo.anaconda.com/archive/Anaconda3-2024.10-1-Linux-x86_64.sh
+This optional feature generates insights into the news sources, such as:
+- The proportion of topics per day.
+- Sentiment per company.
+- The most mentioned companies.
 
-https://medium.com/eni-digitalks/text-preprocessing-nlp-fundamentals-with-spacy-54f32e520bc8
+These insights are plotted and saved in the `results/` folder.
 
-https://scikit-learn.org/dev/auto_examples/model_selection/plot_learning_curve.html#sphx-glr-auto-examples-model-selection-plot-learning-curve-py
+## Learning Objectives
 
-https://www.alliage-ad.com/data-science/structures-de-sauvegarde-de-modele-de-machine-learning-le-format-pickle/
+By working through this project, you will:
+- Set up an NLP-focused Python environment.
+- Implement essential text preprocessing techniques such as tokenization, stop-word removal, and stemming.
+- Build a complete text preprocessing pipeline.
+- Apply machine learning models for topic classification and sentiment analysis.
+- Understand how to use pre-trained models for NLP tasks.
+- Perform advanced NLP techniques, including entity recognition and scandal detection.
+
+## How to Run the Project
+
+1. **Run the Scraper**: Collect at least 300 articles by running `scraper_news.py`.
+
+   ```bash
+   python scraper_news.py
+   ```
+
+2. **Process the Articles**: Use `nlp_enriched_news.py` to process the scraped articles.
+
+   ```bash
+   python nlp_enriched_news.py
+   ```
+
+3. **Review the Results**: Check the `results/` folder for the CSV file containing the enriched data and the saved model files.
+
+---
+
+## License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+---
+
+This README should provide you with all the information you need to understand and run the project. Happy coding!
