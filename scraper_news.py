@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
-from datetime import datetime, timedelta
+from datetime import  timedelta
 from data import operations_db
 import sqlite3
 import pandas as pd
@@ -49,6 +49,7 @@ def scraper_new():
 
     counter =1
     page_id =0
+
     while counter<=350:
         
         html= requests.get(f'https://www.bbc.com/search?q=news&page={page_id}')
@@ -80,16 +81,22 @@ def scraper_new():
                         url=domain+link
                         body_article= get_description(url)
 
-                        operations_db.insert_article(conn, url, date, title.text, body_article )
+                        # operations_db.insert_article(conn, url, date, title.text, body_article )
                         
-
+                        
                         print(f'{counter} scraping {url}'
                             '\n     requesting ...'
                             '\n     parsing ...'
                             '\n     saved in <./data/articles.db>')
                         print('----------------------------------------------------------')
                         
+
                         counter+=1
+
+                        if counter==351:
+                             exit()
+                         
+                       
                         
                         
             page_id += 1

@@ -1,7 +1,6 @@
 # pip install -U spacy
 # python -m spacy download en_core_web_lg
 
-
 import pandas as pd
 import numpy as np
 import nltk
@@ -20,13 +19,24 @@ nlp = spacy.load("en_core_web_lg")
 
 
 def entities_detection(text, nlp):
-    doc = nlp(text)
-    entities = []
+    """
+    The function takes two parameters as input:
+     - `text`: a string containing the text in which entities need to be detected.
+     - `nlp`: a pre-trained NLP model  from spaCy used to process the text.
+    """
+    doc = nlp(text)  # The NLP model is applied to the text, creating a 'doc' object containing all the processed linguistic information.
+    
+    entities = []  # Initialize an empty list to store detected entities.
+
+    # Loop through all the entities detected in the text
     for entity in doc.ents:
-        if entity.label_ == 'ORG' and entity.text not in  entities:  
-            entities.append( entity.text)
-            
-    return entities
+        # Check if the entity is of type 'ORG' (organization) and if it hasn't already been added to the `entities` list.
+        if entity.label_ == 'ORG' and entity.text not in entities:
+            # If both conditions are met, append the entity's text to the list.
+            entities.append(entity.text)
+    
+    return entities  # Return the list of organization ('ORG') entities detected in the text.
+
 
 
 def sentiment_analysis(text): 
@@ -59,79 +69,72 @@ def sentiment_analysis(text):
    
 
 
-def create_sentence_df(df):
-    new_rows = []
-    
-    for _, row in df.iterrows():
-        articleid = row['ArticleId']
-        text = row['Text']
-        org_list = row['Org']
-        
-        sentences = sent_tokenize(text)
-          
-        for sentence in sentences:
-            sentence = ' '.join(sentence.split())
-            orgs_in_sentence = []  
-            
-            for org in org_list:
-                if org in sentence and org not in orgs_in_sentence:
-                    orgs_in_sentence.append(org)
-            
-            if orgs_in_sentence:
-                new_rows.append([articleid, sentence, orgs_in_sentence])
-
-    
-    new_df = pd.DataFrame(new_rows, columns=['articleid', 'sentence', 'Org'])
-    
-    return new_df
-
-
-
-
 def similarity(sentence, keyword, nlp):
-    doc1 = nlp(keyword)
-    doc2 = nlp(sentence)
+    """
+     The function takes three parameters:
+     - `sentence`: a string representing a sentence that will be compared.
+     - `keyword`: a string representing a keyword to compare against the sentence.
+     - `nlp`: a pre-trained NLP model from spaCy used to process both the sentence and the keyword.
+    """
+   
 
-    similarity = doc1.similarity(doc2)
+    doc1 = nlp(keyword)  # Apply the NLP model to the keyword, creating a 'doc' object for the keyword.
+    doc2 = nlp(sentence)  # Apply the NLP model to the sentence, creating a 'doc' object for the sentence.
+
+    similarity = doc1.similarity(doc2)  # Calculate the semantic similarity between the two 'doc' objects (keyword and sentence).
     
-    return similarity
+    return similarity  # Return the computed similarity score (a value between 0 and 1).
 
 
 def scandal_detection(row, keywords, org_list, nlp):
+    """
+    The function takes four parameters:
+    - `row`: a single row from the DataFrame containing information about an article (e.g., 'Body' and 'Unique ID').
+    - `keywords`: a list of keywords to check against the sentences.
+    - `org_list`: a list of organizations to search for within the article.
+    - `nlp`: a pre-trained NLP model from spaCy to calculate semantic similarity.
+    """
+   
 
-    body=row['Body']
-    article_id= row['Unique ID']
-    
-        
+    body = row['Body']  # Extract the body text of the article from the row.
+    article_id = row['Unique ID']  # Extract the unique article ID from the row.
+
+    # Tokenize the article body into sentences.
     sentences = sent_tokenize(body)
 
-    new_rows=[]
+    new_rows = []  # Initialize an empty list to store data for new rows.
 
+    # Loop through each sentence in the article.
     for sentence in sentences:
-        sentence = ' '.join(sentence.split())
-        orgs_in_sentence = []  
-            
-        for org in org_list:
+        sentence = ' '.join(sentence.split())  # Clean up extra spaces in the sentence.
+        orgs_in_sentence = []  # Initialize an empty list to store organizations found in the sentence.
 
+        for org in org_list:
             if org in sentence and org not in orgs_in_sentence:
-                orgs_in_sentence.append(org)  
-        
+                orgs_in_sentence.append(org)  # Add the organization to the list if it appears in the sentence.
+
+        # If at least one organization was found in the sentence, add the sentence and organizations to new_rows.
         if orgs_in_sentence:
             new_rows.append([article_id, sentence, orgs_in_sentence])
-                
+
     df = pd.DataFrame(new_rows, columns=['Unique ID', 'sentence', 'Org'])
 
+    key_words_colums = []
 
-    key_words_colums=[]
+    # For each keyword, calculate the semantic similarity between the sentence and the keyword.
     for keyword in keywords:
-        df[f'similarity {keyword}']= df['sentence'].apply(lambda sentence: np.round(similarity(sentence, keyword, nlp), 2))
+
+        df[f'similarity {keyword}'] = df['sentence'].apply(lambda sentence: np.round(similarity(sentence, keyword, nlp), 2))
         key_words_colums.append(f'similarity {keyword}')
 
-    article_scandal_df= df.groupby('Unique ID')[key_words_colums].max()
+    # Group the DataFrame by 'Unique ID' and get the maximum similarity value for each keyword per article.
+    article_scandal_df = df.groupby('Unique ID')[key_words_colums].max()
 
-    scandal_distance =  np.mean(article_scandal_df[key_words_colums])
+    # Calculate the average similarity across all keywords for each article.
+    scandal_distance = np.mean(article_scandal_df[key_words_colums])
 
-    return scandal_distance
+    return scandal_distance  # Return the mean similarity score, which can be used as a measure of scandal relevance.
+
     
     
 def enriched_sentence(row, nlp, model, vectorizer, dict_topic ):
@@ -227,7 +230,6 @@ df['Top_10'] = df['Scandal_distance'].apply(lambda x: x in top10_article['Scanda
 
 df.to_csv('./results/enhanced_news.csv', index= False)
 
-print(df.head(5))
 
 
 

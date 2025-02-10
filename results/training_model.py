@@ -28,7 +28,7 @@ X_test= cv.transform(test_data['Text'])
 with open("vectorizer.pkl", "wb") as vec_file:
     pickle.dump(cv, vec_file)
 
-##
+
 
 dict_topic = {'sport': 1 ,  'business':2,  'politics': 3, 'entertainment':4 ,  'tech':5}
 train_data['Category'] = train_data['Category'].apply(lambda x: dict_topic.get(x, 0))
