@@ -138,7 +138,7 @@ def scandal_detection(row, keywords, org_list, nlp):
     
     
 def enriched_sentence(row, nlp, model, vectorizer, dict_topic ):
-
+    print("\n\n\n")
     title= row['Headline']
     body=row['Body']
     artcle_id= row['Unique ID']
@@ -148,8 +148,8 @@ def enriched_sentence(row, nlp, model, vectorizer, dict_topic ):
     #---------------------------------- entity detection ----------------------------------
 
     print("\n--------- Detect entities ----------")
-    text= title + ' ' +  body
-    org=entities_detection(text,  nlp )
+    text = title + ' ' +  body
+    org = entities_detection(text,  nlp )
     print(f'Detected {len(org)} companies which are {", ".join(org)}')
 
     #---------------------------------- Topic detection ----------------------------------

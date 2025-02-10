@@ -42,6 +42,19 @@ def convert_to_date(date_str):
     return date
 
 
+def delete_data_db():
+
+    conn = sqlite3.connect('./data/articles.db')
+
+    cur = conn.cursor()
+
+    cur.execute("DELETE FROM articles") 
+
+    conn.commit()
+
+    conn.close()
+
+
 
 def scraper_new(): 
     
@@ -49,6 +62,11 @@ def scraper_new():
 
     counter =1
     page_id =0
+
+    delete_data_db()
+
+    conn = sqlite3.connect('./data/articles.db')
+
 
     while counter<=350:
         
@@ -81,7 +99,7 @@ def scraper_new():
                         url=domain+link
                         body_article= get_description(url)
 
-                        # operations_db.insert_article(conn, url, date, title.text, body_article )
+                        operations_db.insert_article(conn, counter, url, date, title.text, body_article )
                         
                         
                         print(f'{counter} scraping {url}'
@@ -109,7 +127,6 @@ def scraper_new():
     conn.close()   
         
         
-
 
 
 scraper_new()

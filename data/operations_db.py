@@ -4,13 +4,16 @@ import pandas as pd
 
 
 # Insert article
-def insert_article(conn, url, date, headline, body_article):
+def insert_article(conn, unique_id,  url, date, headline, body_article):
    
     cursor = conn.cursor()
-    cursor.execute('''
-    INSERT INTO articles (URL, 'Date scraped', Headline, Body)
-    VALUES (?, ?, ?, ?)
-    ''', (url, date, headline, body_article))
+    cursor.execute(
+        '''
+        INSERT INTO articles ('Unique ID', URL, 'Date scraped', Headline, Body)
+        VALUES (?, ?, ?, ?, ?)
+        
+        ''', (unique_id, url, date, headline, body_article)
+    )
     
     conn.commit()
 
